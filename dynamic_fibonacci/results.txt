@@ -1,0 +1,27 @@
+Enter -1 to exit
+
+N: 5
+fibonacci(5) = 5
+
+N: 10
+fibonacci(10) = 55
+
+N: 15
+fibonacci(15) = 610
+
+N: 20
+fibonacci(20) = 6765
+
+N: 25
+fibonacci(25) = 75025
+
+N: 30
+fibonacci(30) = 832040
+
+N: 35
+fibonacci(35) = 9227465
+
+N: 40
+fibonacci(40) = 102334155
+
+N: -1
