@@ -1,3 +1,13 @@
 fn main() {
-    println!("Hello, world!");
+    for n in 0..22 {
+        println!("{}! = {}", n, factorial(n));
+    }
+}
+
+fn factorial(n: i64) -> i64 {
+    if n > 0 {
+        n * factorial(n - 1)
+    } else {
+        1
+    }
 }
