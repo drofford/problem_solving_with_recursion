@@ -1,21 +1,19 @@
 mod algorithms;
 mod utils;
 
-use algorithms::fibonacci;
+use algorithms::fibonacci_on_the_fly;
 use utils::get_i64;
 
 fn main() {
-    println!("Enter -1 to exit\n");
+
+    let mut fill_on_the_fly_values: Vec<i64> = vec![0, 1];
+
     loop {
         // Prompt the user for n.
         let n = get_i64("N: ");
 
-        // If n < 0, break out of the loop.
-        if n < 0 {
-            break;
-        }
-
         // Calculate the Fibonacci number.
-        println!("fibonacci({}) = {}\n", n, fibonacci(n));
+        println!("On the fly: {}", fibonacci_on_the_fly(&mut fill_on_the_fly_values, n));
+        println!();
     }
 }
