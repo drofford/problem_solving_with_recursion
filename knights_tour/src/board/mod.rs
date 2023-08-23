@@ -1,3 +1,5 @@
+use std::fmt;
+
 // The board dimensions.
 pub const NUM_ROWS: usize = 8;
 pub const NUM_COLS: usize = NUM_ROWS;
@@ -5,14 +7,36 @@ pub const INUM_ROWS: i32 = NUM_ROWS as i32;
 pub const INUM_COLS: i32 = NUM_COLS as i32;
 pub const UNVISITED: i32 = -1;
 
+#[derive(Clone)]
 pub struct Cell {
     pub row: usize,
     pub col: usize,
 }
 
-impl Cell  {
-    pub fn new() -> Self {
-        return Self { row: 0, col: 0 };
+impl Cell {
+    pub fn new(r: usize, c: usize) -> Self {
+        let val = Self { row: r, col: c };
+        return val;
+    }
+
+    pub fn add(&mut self, dr: usize, dc: usize) -> bool {
+        let nr: i32 = (self.row as i32) + (dr as i32);
+        let nc: i32 = (self.col as i32) + (dc as i32);
+
+        println!("Cell::add: Cell = {}, ({}, {}), ({}, {})", self, dr, dc, nr, nc);
+
+        if within_limits(nr, nc) {
+            self.row = nr as usize;
+            self.col = nc as usize;
+            return true;
+        }
+        false
+    }
+}
+
+impl fmt::Display for Cell {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "({}, {})", self.row, self.col)
     }
 }
 
@@ -42,8 +66,17 @@ pub fn dump_board(board: &[[i32; NUM_COLS]; NUM_ROWS]) {
     }
 }
 
+pub fn within_limits(row: i32, col: i32) -> bool {
+    row >= 0 && row < INUM_ROWS && col >= 0 && col < INUM_COLS
+}
+
 pub fn is_cell_within_board(board: &[[i32; NUM_COLS]; NUM_ROWS], cell: &Cell) -> bool {
-    cell.row >= 0 && cell.row < NUM_ROWS && cell.col >=0 && cell.col < NUM_COLS
+    cell.row >= 0 && cell.row < NUM_ROWS && cell.col >= 0 && cell.col < NUM_COLS
+}
+
+pub fn pick_initial_cell(num_rows: usize, num_cols: usize) -> Cell {
+    let mut cell = Cell::new(0, 0);
+    cell
 }
 
 pub fn store_value_in_cell(board: &mut [[i32; NUM_COLS]; NUM_ROWS], cell: &Cell, value: i32) {

@@ -1,18 +1,14 @@
 mod board;
+mod tour;
 
 use std::time::Instant;
 
 use board::{
-    NUM_ROWS,
-    NUM_COLS,
-    INUM_ROWS,
-    INUM_COLS,
-    UNVISITED,
-    Cell,
-    is_cell_within_board,
-    dump_board,
-    store_value_in_cell,
+    dump_board, is_cell_within_board, pick_initial_cell, store_value_in_cell, Cell, INUM_COLS,
+    INUM_ROWS, NUM_COLS, NUM_ROWS, UNVISITED,
 };
+
+use tour::{danger_danger, find_tour};
 
 // Whether we want an open or closed tour.
 const REQUIRE_CLOSED_TOUR: bool = false;
@@ -41,13 +37,9 @@ fn main() {
 
     let mut cur_cell = pick_initial_cell(NUM_ROWS, NUM_COLS);
 
-    store_value_in_cell(&mut board, &cur_col, 1);
+    store_value_in_cell(&mut board, &cur_cell, 1);
 
-    let r = find_tour(&mut board, &offsets, &cur_cell, 1);
-    println("top level call to find_tour returned {}", r);
-}
-
-
-fn pick_initial_cell(num_rows: usize, num_cols: usize) -> Cell {
-    return Cell::new();
+    tour::danger_danger();
+    let r = tour::find_tour(&mut board, &offsets, &cur_cell, 1);
+    // println("top level call to find_tour returned {}", r);
 }
