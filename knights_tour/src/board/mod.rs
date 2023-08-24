@@ -1,3 +1,4 @@
+use std::clone::Clone;
 use std::fmt;
 
 // The board dimensions.
@@ -7,30 +8,34 @@ pub const INUM_ROWS: i32 = NUM_ROWS as i32;
 pub const INUM_COLS: i32 = NUM_COLS as i32;
 pub const UNVISITED: i32 = -1;
 
-#[derive(Clone)]
 pub struct Cell {
-    pub row: usize,
-    pub col: usize,
+    // pub urow: usize,
+    // pub ucol: usize,
+    pub row: i32,
+    pub col: i32,
 }
 
 impl Cell {
-    pub fn new(r: usize, c: usize) -> Self {
+    pub fn new(r: i32, c: i32) -> Self {
         let val = Self { row: r, col: c };
         return val;
     }
 
-    pub fn add(&mut self, dr: usize, dc: usize) -> bool {
-        let nr: i32 = (self.row as i32) + (dr as i32);
-        let nc: i32 = (self.col as i32) + (dc as i32);
+    pub fn add_offset(&mut self, offset: &[i32; 2]) {
+        print!("Cell::add_offset: inp Cell = {}, offset = {:?}", self, offset);
+        self.row += offset[0];
+        self.col += offset[1];
+        println!(", out Cell = {}", self);
+    }
 
-        println!("Cell::add: Cell = {}, ({}, {}), ({}, {})", self, dr, dc, nr, nc);
+}
 
-        if within_limits(nr, nc) {
-            self.row = nr as usize;
-            self.col = nc as usize;
-            return true;
+impl std::clone::Clone for Cell {
+    fn clone(&self) -> Self {
+        Self {
+            row: self.row,
+            col: self.col,
         }
-        false
     }
 }
 
@@ -71,7 +76,7 @@ pub fn within_limits(row: i32, col: i32) -> bool {
 }
 
 pub fn is_cell_within_board(board: &[[i32; NUM_COLS]; NUM_ROWS], cell: &Cell) -> bool {
-    cell.row >= 0 && cell.row < NUM_ROWS && cell.col >= 0 && cell.col < NUM_COLS
+    cell.row >= 0 && cell.row < INUM_ROWS && cell.col >= 0 && cell.col < INUM_COLS
 }
 
 pub fn pick_initial_cell(num_rows: usize, num_cols: usize) -> Cell {
@@ -81,6 +86,6 @@ pub fn pick_initial_cell(num_rows: usize, num_cols: usize) -> Cell {
 
 pub fn store_value_in_cell(board: &mut [[i32; NUM_COLS]; NUM_ROWS], cell: &Cell, value: i32) {
     if is_cell_within_board(board, cell) {
-        board[cell.row][cell.col] = value;
+        board[cell.row as usize][cell.col as usize] = value;
     }
 }

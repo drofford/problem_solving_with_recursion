@@ -31,8 +31,11 @@ pub fn find_tour(
         // nxt_cell = cur_cell + offset
 
 
-        let new_cell = Cell::new(cur_cell.row + offset[0],cur_cell.col+offset[1]);
-        let on_board: bool = is_cell_within_board(board, cur_cell);
+        let mut new_cell = cur_cell.clone();
+        new_cell.add_offset(&offsets[offset_idx]);
+
+        // let new_cell = Cell::new(cur_cell.row + offset[0],cur_cell.col+offset[1]);
+        let on_board: bool = is_cell_within_board(board, &new_cell);
         println!("find_tour: cur_cell = {}, offset_idx = {}, offset = {:?}, new_cell = {}, on board = {}",
                  cur_cell, offset_idx, offsets[offset_idx], &new_cell, on_board);
     }

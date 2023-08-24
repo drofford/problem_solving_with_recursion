@@ -8,7 +8,7 @@ use board::{
     INUM_ROWS, NUM_COLS, NUM_ROWS, UNVISITED,
 };
 
-use tour::{danger_danger, find_tour};
+use tour::find_tour;
 
 // Whether we want an open or closed tour.
 const REQUIRE_CLOSED_TOUR: bool = false;
@@ -29,17 +29,16 @@ fn main() {
     // Create a NUM_ROWS x NUM_COLS vector with all entries Initialized to UNVISITED.
     let mut board = [[board::UNVISITED; board::NUM_COLS]; board::NUM_ROWS];
 
+    let mut cur_cell = pick_initial_cell(NUM_ROWS, NUM_COLS);
+
+    store_value_in_cell(&mut board, &cur_cell, 1);
+
     println!();
     println!("=============================");
     println!("= I N I T I A L   B O A R D =");
     println!("=============================");
     board::dump_board(&board);
 
-    let mut cur_cell = pick_initial_cell(NUM_ROWS, NUM_COLS);
-
-    store_value_in_cell(&mut board, &cur_cell, 1);
-
-    tour::danger_danger();
     let r = tour::find_tour(&mut board, &offsets, &cur_cell, 1);
     // println("top level call to find_tour returned {}", r);
 }
