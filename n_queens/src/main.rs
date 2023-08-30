@@ -1,4 +1,4 @@
-use std::time::{Instant};
+use std::time::Instant;
 
 // The board dimensions.
 const NUM_ROWS: usize = 5;
@@ -41,23 +41,31 @@ fn board_is_a_solution(board: &mut [[char; NUM_COLS]; NUM_ROWS]) -> bool {
             }
         }
         if count == NUM_ROWS {
-            println!("board_is_a_solution [0] count = {}, NUM_ROWS = {}", count, NUM_ROWS);
-            println!("board_is_a_solution [1] returns TRUE");
+            println!(
+                "board_is_a_solution [0] count = {}, NUM_ROWS = {}",
+                count, NUM_ROWS
+            );
+            println!("board_is_a_solution [1] returns TRUE (it's a solution)");
             return true;
         } else {
-            println!("board_is_a_solution [2] count = {}, NUM_ROWS = {}", count, NUM_ROWS);
-            println!("board_is_a_solution [3] returns false");
+            println!(
+                "board_is_a_solution [2] count = {}, NUM_ROWS = {}",
+                count, NUM_ROWS
+            );
+            println!("board_is_a_solution [3] returns false (it's not a solution");
         }
+    } else {
+        println!("board_is_a_solution [4] returns false (it's not a solution");
     }
-    println!("board_is_a_solution [4] returns false");
     false
 }
 
 // Return true if the board is legal.
 fn board_is_legal(board: &mut [[char; NUM_COLS]; NUM_ROWS]) -> bool {
-
     // every row
+    println!("CHECKING EACH ROW BY COLUMN");
     for row in 0..INUM_ROWS {
+        println!("Checking row {}", row);
         if !series_is_legal(board, row, 0, 0, 1) {
             println!("board_is_legal [1] returns false");
             return false;
@@ -65,27 +73,39 @@ fn board_is_legal(board: &mut [[char; NUM_COLS]; NUM_ROWS]) -> bool {
     }
 
     // every column
+    println!("CHECKING EACH COLUMN BY ROW");
     for col in 0..INUM_COLS {
+        println!("Checking column {}", col);
         if !series_is_legal(board, 0, col, 1, 0) {
             println!("board_is_legal [2] returns false");
             return false;
         }
     }
 
+    println!("CHECKING DIAGONALS");
     for row in 0..INUM_ROWS {
-        if !series_is_legal(board, row, row, 1, 1) {
-            println!("board_is_legal [3] returns false when row={}", row);
-            return false;
+        for col in 0..INUM_COLS {
+            println!("Checking diagonal at ({}, {})", row, col);
+            if !series_is_legal(board, row, row, 1, 1) {
+                println!("board_is_legal [3] returns false when row={}, col={}", row, col);
+                return false;
+            }
         }
     }
-
-    // every diagnonal
-    for col in 0..INUM_COLS {
-        if !series_is_legal(board, 0, col, 1, 1) {
-            println!("board_is_legal [4] returns false");
-            return false;
-        }
-    }
+    // for row in 0..INUM_ROWS {
+    //     if !series_is_legal(board, row, row, 1, 1) {
+    //         println!("board_is_legal [3] returns false when row={}", row);
+    //         return false;
+    //     }
+    // }
+    //
+    // // every diagnonal
+    // for col in 0..INUM_COLS {
+    //     if !series_is_legal(board, 0, col, 1, 1) {
+    //         println!("board_is_legal [4] returns false");
+    //         return false;
+    //     }
+    // }
 
     println!("board_is_legal [5] returns TRUE");
     return true;
@@ -103,11 +123,12 @@ fn dump_board(board: &mut [[char; NUM_COLS]; NUM_ROWS]) {
 // Try placing a queen at position [r][c].
 // Return true if we find a legal board.
 fn place_queens_1(board: &mut [[char; NUM_COLS]; NUM_ROWS], r: i32, c: i32) -> bool {
-
     unsafe {
         NUM_MOVES += 1;
-        println!("place_queens_1 [0] This is the state of the board before move #{} with r={}, c={}:", 
-            NUM_MOVES, r, c);
+        println!(
+            "place_queens_1 [0] This is the state of the board before move #{} with r={}, c={}:",
+            NUM_MOVES, r, c
+        );
     };
 
     dump_board(board);
@@ -129,44 +150,53 @@ fn place_queens_1(board: &mut [[char; NUM_COLS]; NUM_ROWS], r: i32, c: i32) -> b
 
     // (1) do not place a Queen at [r][c] and check
     if place_queens_1(board, next_r, next_c) {
-        println!("place_queens_1 [2] returns TRUE");
+        println!("place_queens_1 [2] at ({}, {}) returns TRUE", next_r, next_c);
         return true; // solution found
     }
 
     // (2) do place a Queen at [r][c] and check
     board[r as usize][c as usize] = 'Q';
     if place_queens_1(board, next_r, next_c) {
-        println!("place_queens_1 [3] returns TRUE");
+        println!("place_queens_1 [3] at ({}, {}) returns TRUE", next_r, next_c);
         return true; // solution found
     }
 
     // uh oh -no solution
     board[r as usize][c as usize] = '.';
-    println!("place_queens_1 [4] returns false");
+    println!("place_queens_1 [4] at ({}, {}) returns false", r, c);
     return false;
 }
 
 // Return true if this series of squares contains at most one queen.
-fn series_is_legal(board: &mut [[char; NUM_COLS]; NUM_ROWS],
-    r0: i32, c0: i32, dr: i32, dc: i32) -> bool {
-
+fn series_is_legal(
+    board: &mut [[char; NUM_COLS]; NUM_ROWS],
+    r0: i32,
+    c0: i32,
+    dr: i32,
+    dc: i32,
+) -> bool {
     let mut count: i32 = 0;
 
     let mut r = r0;
     let mut c = c0;
+    let mut found: bool = false;
 
-    while r < INUM_ROWS && c < INUM_COLS  {
+    while r < INUM_ROWS && c < INUM_COLS {
         if board[r as usize][c as usize] == 'Q' {
-            count += 1;
-            println!("series_is_legal [0] found Q at r={}, c={}, count={}", r, c, count);
+            if found {
+                println!("series_is_legal [0] r0={}, c0={}, dr={}, dc={}: ILLEGAL: found 2nd Q at r={}, c={}",
+                         r0, c0, dr, dc, r, c);
+                return false;
+            } else {
+                println!("series_is_legal [1] r0={}, c0={}, dr={}, dc={}: found Q at r={}, c={}",
+                         r0, c0, dr, dc, r, c);
+                found = true;
+            }
         }
         r += dr;
         c += dc;
     }
 
-    let result = count < 2;
-    println!("series_is_legal [1] r0={}, c0={}, dr={}, dc={}, r={}, c={}, count={}, return {}",
-        r0, c0, dr, dc, r, c, count, result);
-    return result;
+    println!("series_is_legal [2] r0={}, c0={}, dr={}, dc={}: LEGAL", r0, c0, dr, dc);
+    true
 }
-
