@@ -82,30 +82,21 @@ fn board_is_legal(board: &mut [[char; NUM_COLS]; NUM_ROWS]) -> bool {
         }
     }
 
-    println!("CHECKING DIAGONALS");
-    for row in 0..INUM_ROWS {
-        for col in 0..INUM_COLS {
-            println!("Checking diagonal at ({}, {})", row, col);
-            if !series_is_legal(board, row, row, 1, 1) {
-                println!("board_is_legal [3] returns false when row={}, col={}", row, col);
-                return false;
-            }
+    // for row 0, check each diagonal
+    for col in 0..INUM_COLS {
+        if !series_is_legal(board, 0, col, 1, 1) {
+            println!("board_is_legal [3] returns false");
+            return false;
         }
     }
-    // for row in 0..INUM_ROWS {
-    //     if !series_is_legal(board, row, row, 1, 1) {
-    //         println!("board_is_legal [3] returns false when row={}", row);
-    //         return false;
-    //     }
-    // }
-    //
-    // // every diagnonal
-    // for col in 0..INUM_COLS {
-    //     if !series_is_legal(board, 0, col, 1, 1) {
-    //         println!("board_is_legal [4] returns false");
-    //         return false;
-    //     }
-    // }
+    
+    // for col 0, check each diagonal
+    for row in 0..INUM_ROWS {
+        if !series_is_legal(board, row, 0, 1, 1) {
+            println!("board_is_legal [3] returns false when row={}", row);
+            return false;
+        }
+    }
 
     println!("board_is_legal [5] returns TRUE");
     return true;
@@ -134,7 +125,7 @@ fn place_queens_1(board: &mut [[char; NUM_COLS]; NUM_ROWS], r: i32, c: i32) -> b
     dump_board(board);
 
     if r >= INUM_ROWS {
-        println!("place_queens_1 [1] returns TRUE (r = {})", r);
+        println!("place_queens_1 [1] has completely checked the whole board and returns TRUE (r = {})", r);
         return board_is_a_solution(board);
     }
 
